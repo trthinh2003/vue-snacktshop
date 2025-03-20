@@ -1,7 +1,12 @@
 const admin = [
     {
+        path: '/admin-login',
+        name: 'admin-login',
+        component: () => import('../layouts/backend/admin-login.vue')
+    },
+    {
         path: '/admin',
-        component: () => import('../layouts/admin.vue'),
+        component: () => import('../layouts/backend/admin.vue'),
         children: [
             {
                 path: 'users',
@@ -24,7 +29,7 @@ const admin = [
                 component: () => import('../pages/admin/categories/index.vue')
             }
         ]
-    }
+    },
 ];
 
 export default admin;

@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+.login-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(to right, #ddd, #eee);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-title {
+  font-size: 32px;
+  font-weight: 800;
+  background: linear-gradient(to right, #7b2cbf, #9d4edd, #7b2cbf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.login-box {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.login-box h2 {
+  margin-bottom: 10px;
+}
+
+.login-box label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.login-box input[type="text"],
+.login-box input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.3s;
+}
+
+.login-box input[type="text"]:focus,
+.login-box input[type="password"]:focus {
+  border-color: #7b2cbf;
+}
+
+.login-box .forgot {
+  color: red;
+  float: right;
+  font-size: 13px;
+}
+
+.login-btn {
+  background-color: #7b2cbf;
+  color: #fff;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #5a189a;
+}

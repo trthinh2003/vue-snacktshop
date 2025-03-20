@@ -40,7 +40,7 @@
 import { defineComponent } from 'vue';
 import { UserOutlined, TagsOutlined, ToolOutlined, HddOutlined } from '@ant-design/icons-vue';
 import { storeToRefs } from 'pinia';
-import { useMenu } from '../stores/use-menu.js';
+import { useMenu } from '../../stores/use-menu.js';
 export default defineComponent({
   /*Cach viet 1
     setup() {

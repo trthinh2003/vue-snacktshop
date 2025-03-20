@@ -18,8 +18,8 @@
     </div>
 </template>
 <script>
-import Header from '../components/Header.vue';
-import Menu from '../components/Menu.vue';
+import Header from '../../components/backend/Header.vue';
+import Menu from '../../components/backend/Menu.vue';
 
 export default {
     components: {
