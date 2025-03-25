@@ -1,83 +1,98 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
-}
-
 .login-wrapper {
-  min-height: 100vh;
-  width: 100%;
-  background: linear-gradient(to right, #ddd, #eee);
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.login-title {
-  font-size: 32px;
-  font-weight: 800;
-  background: linear-gradient(to right, #7b2cbf, #9d4edd, #7b2cbf);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  min-height: 100vh;
+  background: #f4f4f4;
 }
 
 .login-box {
+  width: 400px;  /* Tăng rộng form */
   background: #fff;
-  padding: 30px 40px;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-.login-box h2 {
+.login-title {
+  font-size: 28px;
+  color: #8e44ad;
   margin-bottom: 10px;
 }
 
-.login-box label {
-  font-weight: 500;
-  margin-bottom: 5px;
+.login-box input {
+  width: 100%;
+  padding: 15px 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+  transition: border-color 0.3s;
+}
+
+.login-box input:focus {
+  border-color: #f48fb1;
+}
+
+.input-error {
+  border: 1px solid #e53935 !important;
+}
+
+.error-text {
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 5px;
+  min-height: 16px;
   display: block;
 }
 
-.login-box input[type="text"],
-.login-box input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  outline: none;
-  transition: 0.3s;
-}
-
-.login-box input[type="text"]:focus,
-.login-box input[type="password"]:focus {
-  border-color: #7b2cbf;
-}
-
-.login-box .forgot {
-  color: red;
-  float: right;
-  font-size: 13px;
-}
-
 .login-btn {
-  background-color: #7b2cbf;
-  color: #fff;
-  padding: 12px;
   width: 100%;
+  padding: 12px;
+  background-color: #8e44ad;
+  color: #fff;
   border: none;
   border-radius: 6px;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background-color 0.3s;
 }
 
 .login-btn:hover {
-  background-color: #5a189a;
+  background-color: #732d91;
+}
+
+.forgot {
+  display: inline-block;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #8e44ad;
+  font-size: 13px;
+}
+
+.forgot:hover {
+  text-decoration: underline;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+.custom-checkbox {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 5px;
+}
+.custom-checkbox label {
+  margin-bottom: 0;
+  position: absolute;
+  top: 4px;
+  left: 15px;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }

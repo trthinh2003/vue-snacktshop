@@ -5,7 +5,9 @@ import axios from 'axios';
 window.axios = axios;
 
 import { 
+    Dropdown,
     Table,
+    Spin,
     Card,
     Menu,
     List,
@@ -22,7 +24,9 @@ import 'bootstrap/dist/css/bootstrap-utilities.min.css';
 const app = createApp(App);
 app.use(router);
 app.use(createPinia());
+app.use(Dropdown);
 app.use(Table);
+app.use(Spin);
 app.use(Card);
 app.use(Menu);
 app.use(List);

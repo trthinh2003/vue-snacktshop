@@ -20,11 +20,19 @@
 <script>
 import Header from '../../components/backend/Header.vue';
 import Menu from '../../components/backend/Menu.vue';
+import { useUserStore } from '../../stores/user';
+import { afterLogin } from '../../services/authService';
 
 export default {
-    components: {
-        Header,
-        Menu
+  components: {
+    Header,
+    Menu
+  },
+  async mounted() {
+    const userStore = useUserStore();
+    if (!userStore.roles || userStore.roles.length === 0) {
+      await afterLogin();
     }
+  }
 }
 </script>
