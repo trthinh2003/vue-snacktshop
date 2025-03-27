@@ -19,7 +19,7 @@ export default defineComponent({
     setup() {
         useMenu().setSelectedKeys(["admin-categories"]);
 
-        const categories = ref([]);
+        // const categories = ref([]);
         const columns = ref([
             {
                 title: 'STT',
@@ -47,19 +47,19 @@ export default defineComponent({
             // },
         ]);
 
-        const getCategories = () => {
-            axios.get('https://localhost:7096/api/category')
-                .then(response => {
-                    categories.value = response.data;
-                    // console.log(categories.value);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        };
-        getCategories();
+        // const getCategories = () => {
+        //     axios.get('https://localhost:7096/api/category')
+        //         .then(response => {
+        //             categories.value = response.data;
+        //             // console.log(categories.value);
+        //         })
+        //         .catch(error => {
+        //             console.log(error);
+        //         });
+        // };
+        // getCategories();
         return {
-            categories,
+            // categories,
             columns
         };
     }

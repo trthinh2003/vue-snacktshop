@@ -3,25 +3,27 @@
 
     <div class="container-fluid mt-3">
         <div class="row">
-            <div class="col-sm-3 d-none d-sm-flex">
+            <div class="col-sm-3 col-md-2 d-none d-sm-flex">
                 <a-list bordered style="width: 100%;">
                     <Menu />
                     <template #header>
-                        <div>BẢNG ĐIỀU KHIỂN</div>
+                      <router-link class="fw-bold text-dark" :to="{ name: 'admin-dashboard' }">
+                        DASHBOARD
+                      </router-link>
                     </template>
                 </a-list>
             </div>
-            <div class="col-12 col-sm-9">
+            <div class="col-12 col-sm-9 col-md-10">
                 <router-view></router-view>
             </div>
         </div>
     </div>
 </template>
 <script>
-import Header from '../../components/backend/Header.vue';
-import Menu from '../../components/backend/Menu.vue';
-import { useUserStore } from '../../stores/user';
-import { afterLogin } from '../../services/authService';
+import Header from '@/components/backend/Header.vue';
+import Menu from '@/components/backend/Menu.vue';
+import { useUserStore } from '@/stores/user';
+import { afterLogin } from '@/services/authService';
 
 export default {
   components: {

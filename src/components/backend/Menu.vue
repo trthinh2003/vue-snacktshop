@@ -1,86 +1,67 @@
 <template>
-  <a-menu v-model:open-keys="openKeys" v-model:selected-keys="selectedKeys" mode="inline">
-    <!-- Tài khoản - Chỉ Admin mới thấy -->
-    <a-menu-item key="admin-users" v-if="hasAnyRole(['admin'])">
-      <router-link :to="{ name: 'admin-users' }">
-        <span>
-          <UserOutlined class="me-2" />Tài khoản
-        </span>
-      </router-link>
-    </a-menu-item>
+  <a-menu
+    v-model:open-keys="openKeys"
+    v-model:selected-keys="selectedKeys"
+    mode="inline"
+    class="custom-menu"
+  >
+    <a-menu-item-group key="account" title="QUẢN TRỊ HỆ THỐNG" v-if="hasAnyRole(['admin', 'manager'])">
+      <a-menu-item key="admin-users" v-if="hasAnyRole(['admin', 'manager'])">
+        <router-link :to="{ name: 'admin-users' }">
+          <UserOutlined class="menu-icon" /> Tài khoản
+        </router-link>
+      </a-menu-item>
+    </a-menu-item-group>
 
-    <!-- Vai trò - Chỉ Admin mới thấy -->
-    <a-menu-item key="admin-roles" v-if="hasAnyRole(['admin'])">
-      <router-link :to="{ name: 'admin-roles' }">
-        <span>
-          <TagsOutlined class="me-2" />Vai trò
-        </span>
-      </router-link>
-    </a-menu-item>
+    <a-menu-item-group key="product" title="QUẢN LÝ SẢN PHẨM" v-if="hasAnyRole(['admin', 'manager', 'saler'])">
+      <a-menu-item key="admin-categories" v-if="hasAnyRole(['admin', 'manager', 'saler'])">
+        <router-link :to="{ name: 'admin-categories' }">
+          <HddOutlined class="menu-icon" /> Danh mục
+        </router-link>
+      </a-menu-item>
 
-    <!-- Cài đặt - Chỉ Admin -->
-    <a-menu-item key="admin-settings" v-if="hasAnyRole(['admin'])">
-      <router-link :to="{ name: 'admin-settings' }">
-        <span>
-          <ToolOutlined class="me-2" />Cài đặt
-        </span>
-      </router-link>
-    </a-menu-item>
+      <a-menu-item key="admin-products" v-if="hasAnyRole(['admin', 'manager', 'saler'])">
+        <router-link :to="{ name: 'admin-products' }" v-if="hasAnyRole(['admin', 'manager', 'saler'])">
+          <AppleOutlined class="menu-icon" /> Sản phẩm
+        </router-link>
+      </a-menu-item>
+    </a-menu-item-group>
 
-    <!-- Danh mục - Admin, Manager, Employee đều thấy -->
-    <a-menu-item key="admin-categories" v-if="hasAnyRole(['admin', 'manager', 'employee'])">
-      <router-link :to="{ name: 'admin-categories' }">
-        <span>
-          <HddOutlined class="me-2" />Quản lý danh mục
-        </span>
-      </router-link>
-    </a-menu-item>
+    <a-menu-item-group key="warehouse" title="QUẢN LÝ KHO HÀNG" v-if="hasAnyRole(['admin', 'manager', 'warehouse'])">
+      <a-menu-item key="admin-imports" v-if="hasAnyRole(['admin', 'manager', 'warehouse'])">
+        <router-link :to="{ name: 'admin-imports' }">
+          <ImportOutlined class="menu-icon" /> Nhập hàng
+        </router-link>
+      </a-menu-item>
 
-    <!-- Sản phẩm - Admin, Manager, Employee đều thấy -->
-    <a-menu-item key="admin-products" v-if="hasAnyRole(['admin', 'manager', 'employee'])">
-      <router-link :to="{ name: 'admin-products' }">
-        <span>
-          <AppleOutlined class="me-2" />Quản lý sản phẩm
-        </span>
-      </router-link>
-    </a-menu-item>
+      <a-menu-item key="admin-suppliers" v-if="hasAnyRole(['admin', 'manager', 'warehouse'])">
+        <router-link :to="{ name: 'admin-suppliers' }">
+          <ShopOutlined class="menu-icon" /> Nhà cung cấp
+        </router-link>
+      </a-menu-item>
+    </a-menu-item-group>
   </a-menu>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import { UserOutlined, TagsOutlined, ToolOutlined, HddOutlined, AppleOutlined } from '@ant-design/icons-vue';
+<script setup>
+import { ref, watchEffect } from 'vue';
+import { UserOutlined, HddOutlined, AppleOutlined, ImportOutlined, ShopOutlined } from '@ant-design/icons-vue';
 import { storeToRefs } from 'pinia';
-import { useMenu } from '../../stores/use-menu.js';
-import { usePermission } from '../../utils/usePermission'
+import { useMenu } from '@/stores/use-menu.js';
+import { usePermission } from '@/utils/usePermission';
 
+const store = useMenu();
+const { hasAnyRole } = usePermission();
+const { openKeys, selectedKeys } = storeToRefs(store);
 
-export default defineComponent({
-  /*Cach viet 1
-  setup() {
-      const openKeys = ref([]);
-      const selectedKeys = ref(['admin-users']);
-      return {
-          openKeys,
-          selectedKeys,
-      };
-  } 
-*/
-  components: {
-    UserOutlined,
-    TagsOutlined,
-    ToolOutlined,
-    HddOutlined,
-    AppleOutlined
-  },
-  setup() {
-    const store = useMenu()
-    const { hasAnyRole } = usePermission()
+const isCollapsed = ref(window.innerWidth < 768);
 
-    return {
-      ...storeToRefs(store),
-      hasAnyRole
-    }
-  }
+watchEffect(() => {
+  window.addEventListener('resize', () => {
+    isCollapsed.value = window.innerWidth < 768;
+  });
 });
 </script>
+
+
+<style scoped src="@/assets/backend/menu.css"></style>

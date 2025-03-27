@@ -39,53 +39,8 @@
 </template>
 
 <script setup>
-import { useForm, useField } from 'vee-validate'
-import * as yup from 'yup'
-import axiosInstance from '@/configs/axios'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-import { message } from 'ant-design-vue'
-import { afterLogin } from '../../services/authService'
-
-const router = useRouter()
-const serverErrors = ref({})
-
-const schema = yup.object({
-    email: yup.string().required('Vui lòng nhập email').email('Email không hợp lệ'),
-    password: yup.string().required('Vui lòng nhập mật khẩu').min(6, 'Mật khẩu phải có ít nhất 6 ký tự')
-})
-
-const { handleSubmit, errors } = useForm({
-    validationSchema: schema
-})
-
-const { value: email } = useField('email')
-const { value: password } = useField('password')
-
-const loading = ref(false)
-
-const onSubmit = handleSubmit(async (values) => {
-    loading.value = true
-    try {
-        const response = await axiosInstance.post('auth/login', values, {
-            withCredentials: true
-        })
-        console.log(response)
-        message.success('Đăng nhập thành công!')
-        await afterLogin()
-        setTimeout(() => {
-            router.push({ name: 'admin-dashboard' })
-        }, 500)
-    } catch (error) {
-        console.log(error)
-        if (error.response?.status === 422) {
-            serverErrors.value = error.response.data.errors
-            message.error('Đăng nhập thất bại!')
-        } 
-    } finally {
-        loading.value = false
-    }
-})
+import useLoginAdmin from '@/composables/useLoginAdmin';
+const { email, password, errors, serverErrors, loading, onSubmit } = useLoginAdmin()
 </script>
 
 <style scoped src="../../assets/backend/login.css"></style>

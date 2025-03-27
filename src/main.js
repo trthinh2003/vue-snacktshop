@@ -17,6 +17,7 @@ import {
 } from 'ant-design-vue';
 import App from './App.vue';
 
+import '@/static/fontawesome/css/all.min.css';
 import 'ant-design-vue/dist/reset.css';
 import 'bootstrap/dist/css/bootstrap-grid.min.css';
 import 'bootstrap/dist/css/bootstrap-utilities.min.css';

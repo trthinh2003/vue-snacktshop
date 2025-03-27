@@ -1,0 +1,20 @@
+.custom-menu {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  padding: 5px 0;
+  min-height: 80vh;
+  font-size: 14px;
+}
+
+.ant-menu-item-group-title {
+  font-weight: bold;
+  color: #555;
+  padding-left: 8px;
+  margin-bottom: 2px;
+}
+
+.menu-icon {
+  font-size: 16px;
+  margin-right: 5px;
+}

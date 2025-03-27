@@ -1,5 +1,5 @@
-import axiosInstance from "../configs/axios";
-import { useUserStore } from "../stores/user";
+import axiosInstance from "@/configs/axios";
+import { useUserStore } from "@/stores/user";
 import Cookies from "js-cookie";
 
 export async function afterLogin() {

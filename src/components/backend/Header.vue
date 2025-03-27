@@ -18,6 +18,7 @@
           </a>
           <template #overlay>
             <a-menu>
+              <a-menu-item>Hồ sơ cá nhân</a-menu-item>
               <a-menu-item @click="handleLogout">Đăng xuất</a-menu-item>
             </a-menu>
           </template>
@@ -25,12 +26,20 @@
       </div>
 
       <div class="col-1 d-flex d-sm-none align-items-center justify-content-center">
-        <span>X</span>
+        <a-dropdown>
+          <span class="text-sm me-3">{{ userName }}</span>            
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>Hồ sơ cá nhân</a-menu-item>
+              <a-menu-item @click="handleLogout">Đăng xuất</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </div>
     </div>
   </div>
 
-  <a-drawer v-model:open="open" title="Danh mục" placement="left">
+  <a-drawer v-model:open="open" title="DASHBOARD" placement="left" class="custom-drawer-menu">
     <Menu />
   </a-drawer>
 </template>
@@ -41,8 +50,9 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import axiosInstance from '../../configs/axios'
-import { DownOutlined } from '@ant-design/icons-vue'
+import { DownOutlined, UserOutlined } from '@ant-design/icons-vue'
 import Cookies from "js-cookie"
+import { useUserStore } from '@/stores/user'
 
 const open = ref(false)
 const router = useRouter()
@@ -57,6 +67,7 @@ const handleLogout = async () => {
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${Cookies.get('access_token')}`;
     await axiosInstance.post('auth/logout', {}, { withCredentials: true })
     Cookies.remove('access_token')
+    useUserStore().setRoles([])
     message.success('Đăng xuất thành công')
     router.push('/admin-login')
   } catch (error) {
@@ -80,5 +91,9 @@ onMounted(async () => {
 .ant-dropdown-link {
   cursor: pointer;
   font-weight: bold;
+}
+.custome-drawer-menu {
+  min-width: 200px;
+  max-width: 220px;
 }
 </style>
