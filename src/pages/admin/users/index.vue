@@ -1,151 +1,127 @@
 <template>
-    <a-card title="Danh sách tài khoản" class="w-100" style="width: 100%">
+    <a-card title="Danh sách tài khoản" class="w-100">
         <div class="row mb-3">
             <div class="col-12 d-flex justify-content-end">
-                <a-button type="primary" class="btn-sm" style="background-color: green;">
-                    <router-link :to="{ name: 'admin-users-create' }">
-                        <i class="fa-solid fa-plus pe-1"></i>Thêm mới
-                    </router-link>
+                <a-button type="primary" class="btn-sm" style="background-color: green;" @click="showModal">
+                    <i class="fa-solid fa-plus pe-1"></i> Thêm mới
                 </a-button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <a-table :columns="columns" :data-source="users" :scroll="{ x: 'max-content', y: 500 }">
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="column.key === 'avatar'">
-                            <img :src="record.avatar || '/default-avatar.png'" alt="Avatar" class="avatar-img" />
-                        </template>
-                        <template v-if="column.key === 'gender'">
-                            <span v-if="record.gender == 1">Nam</span>
-                            <span v-else>Nữ</span>
-                        </template>
-                        <template v-if="column.key === 'roles'">
-                            <span v-if="record.roles == 'admin,manager,saler,warehouse'">Quản lý</span>
-                            <span v-if="record.roles == 'saler'">Nhân viên bán hàng</span>
-                            <span v-if="record.roles == 'warehouse'">Nhân viên kho</span>
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <div class="d-flex flex-column flex-sm-row">
-                                <router-link :to="{ name: 'admin-users-edit', params: { id: record.id } }" class="me-sm-1">
-                                    <a-button type="primary" class="me-sm-1 mb-2 w-100 w-sm-auto">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a-button>
-                                </router-link>
-                                <a-button type="primary" danger class="mb-2 me-sm-1 w-sm-auto">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </a-button>
-                                <a-button class="bg-secondary w-sm-auto">
-                                    <i class="fa-solid fa-eye text-white"></i>
-                                </a-button>
-                            </div>
-                        </template>
-                    </template>
-                </a-table>
-            </div>
-        </div>
+        <UserTable :users="users" :columns="columns" :loading="loading" :pagination="pagination"
+            @update:pagination="pagination = $event" @fetch-data="fetchUsers" />
+        <UserModal :isModalVisible="isModalVisible" :newUser="newUser" :previewImage="previewImage"
+            @submit-user="submitUser" @close-modal="isModalVisible = false" @handle-file-upload="updateAvatar" />
     </a-card>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
-import { useMenu } from '@/stores/use-menu.js';
-import axiosInstance from '@/configs/axios.js';
-import Cookies from "js-cookie";
-export default {
-    setup() {
-        useMenu().setSelectedKeys(["admin-users"]);
-        const users = ref([]);
-        const columns = [
-            {
-                title: 'ID',
-                dataIndex: 'id',
-                key: 'id',
-                width: 50,
-                fixed: 'left',
-            },
-            {
-                title: 'Họ và tên',
-                dataIndex: 'name',
-                key: 'name',
-            },
-            {
-                title: 'Ảnh',
-                dataIndex: 'avatar',
-                scopedSlots: { customRender: 'avatar' },
-                width: 50,
-                key: 'avatar',
-            },
-            {
-                title: 'Email',
-                dataIndex: 'email',
-                key: 'email',
-            },
-            {
-                title: 'SĐT',
-                dataIndex: 'phone',
-                key: 'phone',
-            },
-            {
-                title: 'Giới tính',
-                dataIndex: 'gender',
-                width: 100,
-                key: 'gender',
-            },
-            {
-                title: 'Địa chỉ',
-                dataIndex: 'address',
-                key: 'address',
-            },
-            {
-                title: 'Ngày sinh',
-                dataIndex: 'birthday',
-                key: 'birthday',
-            },
-            {
-                title: 'Chức vụ',
-                dataIndex: 'roles',
-                key: 'roles',
-            },
-            {
-                title: 'Hành động',
-                key: 'operation',
-                fixed: 'right',
-            }
-        ]
-        const getUsers = () => {
-            axiosInstance.get("/admin/users", {
-                headers: {
-                    Authorization: `Bearer ${Cookies.get('access_token')}`,
-                },
-            })
-            .then((res) => {
-                users.value = res.data;
-                console.log(res);
-            })
-            .catch((error) => {
-                console.log(error.response?.data || error);
-            });
-        }
-        getUsers();
-        return {
-            users,
-            columns
-        }
-    }
-}
-</script>
+import { defineComponent, ref, onMounted } from 'vue';
+import { getUsers, createUser } from '@/services/employeeService';
+import UserTable from '@/components/backend/users/UserTable.vue';
+import UserModal from '@/components/backend/users/UserModal.vue';
+import { message } from 'ant-design-vue'
 
-<style scoped>
-:deep(.ant-table-thead > tr > th) {
-  background-color: #f5f5f5 !important;
-  color: #595959 !important;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-.avatar-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-}
-</style>
+export default defineComponent({
+    components: { UserTable, UserModal },
+    setup() {
+        const users = ref([]);
+        const pagination = ref({
+            current: 1,
+            pageSize: 10,
+            total: 0,
+            showSizeChanger: true,
+            showTotal: (total) => `Tổng cộng ${total} tài khoản`
+        });
+        const loading = ref(false);
+        const isModalVisible = ref(false);
+        const newUser = ref({});
+        const previewImage = ref("");
+
+        const columns = ref([
+            { title: "Mã NV", dataIndex: "id", key: "id", align: "center", fixed: "left" },
+            { title: "Avatar", dataIndex: "avatar", key: "avatar", align: "center" },
+            { title: "Tên", dataIndex: "name", key: "name" },
+            { title: "Email", dataIndex: "email", key: "email" },
+            { title: "Số điện thoại", dataIndex: "phone", key: "phone" },
+            { title: "Giới tính", dataIndex: "gender", key: "gender", width: 100 },
+            { title: "Chức vụ", dataIndex: "roles", key: "roles" },
+            { title: "Hành động", key: "operation", align: "center", fixed: "right" }
+        ]);
+
+        const fetchUsers = (page = 1, pageSize = 10) => {
+            loading.value = true;
+            getUsers(page, pageSize)
+                .then((res) => {
+                    users.value = res.data.data;
+                    pagination.value = {
+                        total: res.data.pagination.total,
+                        current: res.data.pagination.current_page,
+                        pageSize: res.data.pagination.per_page,
+                    };
+                })
+                .catch(() => message.error("Không thể lấy dữ liệu"))
+                .finally(() => (loading.value = false));
+        };
+
+        const handleTableChange = (pagination) => {
+            fetchUsers(pagination.current, pagination.pageSize);
+        };
+
+        const showModal = () => (isModalVisible.value = true);
+        const closeModal = () => (isModalVisible.value = false);
+
+        const updateAvatar = ({ file, preview }) => {
+            newUser.value.avatar = file;
+            previewImage.value = preview;
+        };
+
+        const submitUser = (userData) => {
+            try {
+                const formData = new FormData();
+                formData.append("name", userData.name);
+                formData.append("email", userData.email);
+                formData.append("phone", userData.phone);
+                formData.append("gender", userData.gender);
+                formData.append("address", userData.address);
+                formData.append("roles", userData.roles);
+
+                if (newUser.value.avatar) {
+                    formData.append("avatar", newUser.value.avatar);
+                }
+
+                console.log([...formData.entries()]);
+
+                createUser(formData)
+                    .then(() => {
+                        message.success("Tạo tài khoản thành công!");
+                        fetchUsers();
+                        closeModal();
+                    })
+                    .catch((error) => {
+                        if (error.response && error.response.data.errors) {
+                            const errors = error.response.data.errors;
+                            Object.values(errors).forEach((msgs) => {
+                                msgs.forEach((msg) => message.error(msg));
+                            });
+                        } else {
+                            message.error("Có lỗi xảy ra, vui lòng thử lại!");
+                        }
+                    });
+            } catch (error) {
+                console.log(error);
+                message.error("Lỗi hệ thống, vui lòng thử lại sau!");
+            }
+        };
+
+        onMounted(() => {
+            fetchUsers();
+        });
+
+        return {
+            users, pagination, loading, columns,
+            isModalVisible, newUser, previewImage, 
+            fetchUsers, showModal, closeModal, submitUser, updateAvatar, handleTableChange
+        };
+    }
+});
+</script>

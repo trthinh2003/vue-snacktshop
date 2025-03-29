@@ -16,7 +16,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const token = Cookies.get("access_token");
-  const publicPages = ["/admin-login", "/admin-forgot-password"];
+  const publicPages = ["/admin-login", "/admin-forgot-password", "/"];
 
   if (publicPages.includes(to.path)) {
     return next();
